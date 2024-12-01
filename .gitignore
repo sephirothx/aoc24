@@ -1,0 +1,11 @@
+# misc
+input
+.vscode
+.cookie.session
+
+# rust
+target
+
+# zig
+.zig-cache
+zig-out
