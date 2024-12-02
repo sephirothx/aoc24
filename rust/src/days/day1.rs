@@ -2,7 +2,7 @@ use std::{convert::Infallible, str::FromStr};
 
 #[derive(Debug)]
 pub struct Input {
-    columns: [Vec<i32>; 2]
+    columns: [Vec<i32>; 2],
 }
 
 impl FromStr for Input {
@@ -24,10 +24,7 @@ pub fn part1(input: Input) -> i32 {
     let mut v2 = input.columns[1].clone();
     v1.sort();
     v2.sort();
-    v1.into_iter()
-        .zip(v2)
-        .map(|(n1, n2)| (n1 - n2).abs())
-        .sum()
+    v1.into_iter().zip(v2).map(|(n1, n2)| (n1 - n2).abs()).sum()
 }
 
 pub fn part2(input: Input) -> i32 {
