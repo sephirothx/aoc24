@@ -3,7 +3,7 @@ const std = @import("std");
 pub const Input = struct {
     columns: [2]std.ArrayList(i32),
 
-    pub fn parse_input(allocator: std.mem.Allocator, input: []const u8) !Input {
+    pub fn parse(allocator: std.mem.Allocator, input: []const u8) !Input {
         var self = Input{
             .columns = [2]std.ArrayList(i32){
                 std.ArrayList(i32).init(allocator),
@@ -12,6 +12,7 @@ pub const Input = struct {
         };
         var lines = std.mem.splitScalar(u8, input, '\n');
         while (lines.next()) |line| {
+            if (line.len == 0) continue;
             var items = std.mem.tokenizeScalar(u8, line, ' ');
             for (&self.columns) |*column| {
                 const n = try std.fmt.parseInt(i32, items.next().?, 10);
@@ -22,8 +23,9 @@ pub const Input = struct {
     }
 
     pub fn deinit(self: Input) void {
-        self.list1.deinit();
-        self.list2.deinit();
+        for (&self.columns) |*column| {
+            column.*.deinit();
+        }
     }
 };
 
@@ -65,13 +67,13 @@ const TEST_INPUT =
 ;
 
 test "part 1" {
-    const input = try Input.parse_input(std.testing.allocator, TEST_INPUT);
+    const input = try Input.parse(std.testing.allocator, TEST_INPUT);
     defer input.deinit();
     try std.testing.expectEqual(11, part1(std.testing.allocator, input));
 }
 
 test "part 2" {
-    const input = try Input.parse_input(std.testing.allocator, TEST_INPUT);
+    const input = try Input.parse(std.testing.allocator, TEST_INPUT);
     defer input.deinit();
     try std.testing.expectEqual(31, part2(std.testing.allocator, input));
 }
