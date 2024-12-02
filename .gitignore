@@ -9,3 +9,8 @@ target
 # zig
 .zig-cache
 zig-out
+
+# c#
+.vs
+bin
+obj

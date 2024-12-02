@@ -28,7 +28,7 @@ pub fn gcd_vec(numbers: Vec<i64>) -> i64 {
 }
 
 pub fn lcm(a: i64, b: i64) -> i64 {
-    a * b / gcd(a, b)
+    a / gcd(a, b) * b
 }
 
 pub fn lcm_vec(numbers: Vec<i64>) -> i64 {
