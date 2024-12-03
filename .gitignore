@@ -1,5 +1,6 @@
 # misc
 input
+input.txt
 .vscode
 .cookie.session
 
@@ -14,3 +15,6 @@ zig-out
 .vs
 bin
 obj
+
+#python
+venv
