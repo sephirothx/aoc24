@@ -17,9 +17,6 @@ public static class Input
     {
         var inputUrl = $"https://adventofcode.com/{year}/day/{day}/input";
         var cookie = File.ReadAllText(CookiePath);
-        var inputFilePath = string.Format(InputPath, day);
-
-        Console.WriteLine(inputFilePath);
 
         using var httpClient = new HttpClient();
         httpClient.DefaultRequestHeaders.Add("Cookie", $"session={cookie}");
