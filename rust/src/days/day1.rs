@@ -1,7 +1,7 @@
 use std::{convert::Infallible, str::FromStr};
 
 #[derive(Debug)]
-pub struct Input {
+struct Input {
     columns: [Vec<i32>; 2],
 }
 
@@ -19,7 +19,8 @@ impl FromStr for Input {
     }
 }
 
-pub fn part1(input: Input) -> i32 {
+pub fn part1(input: &str) -> i32 {
+    let input = Input::from_str(input).unwrap();
     let mut v1 = input.columns[0].clone();
     let mut v2 = input.columns[1].clone();
     v1.sort();
@@ -27,7 +28,8 @@ pub fn part1(input: Input) -> i32 {
     v1.into_iter().zip(v2).map(|(n1, n2)| (n1 - n2).abs()).sum()
 }
 
-pub fn part2(input: Input) -> i32 {
+pub fn part2(input: &str) -> i32 {
+    let input = Input::from_str(input).unwrap();
     let v1 = input.columns[0].clone();
     let v2 = input.columns[1].clone();
     v1.into_iter()
@@ -49,11 +51,11 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        assert_eq!(11, part1(INPUT.parse().unwrap()));
+        assert_eq!(11, part1(INPUT));
     }
 
     #[test]
     fn test_part2() {
-        assert_eq!(31, part2(INPUT.parse().unwrap()));
+        assert_eq!(31, part2(INPUT));
     }
 }

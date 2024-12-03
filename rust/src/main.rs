@@ -5,16 +5,15 @@ mod geometry;
 mod input;
 mod math;
 
-use days::day2::{Input, *};
+use days::day3::*;
 use input::read_from_file;
-use std::str::FromStr;
+use std::time::Instant;
 
 fn main() {
-    let input = Input::from_str(&read_from_file(2)).unwrap();
-    use std::time::Instant;
+    let input = read_from_file(3);
     let now = Instant::now();
     {
-        println!("{}", part2(input));
+        println!("{}", part2(input.as_str()));
     }
     let elapsed = now.elapsed();
     println!("Elapsed: {:.2?}", elapsed);

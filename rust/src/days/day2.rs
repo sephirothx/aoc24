@@ -1,7 +1,7 @@
 use std::{convert::Infallible, str::FromStr};
 
 #[derive(Debug)]
-pub struct Input {
+struct Input {
     reports: Vec<Vec<i32>>,
 }
 
@@ -21,7 +21,8 @@ impl FromStr for Input {
     }
 }
 
-pub fn part1(input: Input) -> usize {
+pub fn part1(input: &str) -> usize {
+    let input = Input::from_str(input).unwrap();
     input
         .reports
         .into_iter()
@@ -29,17 +30,18 @@ pub fn part1(input: Input) -> usize {
         .count()
 }
 
-pub fn part2(input: Input) -> usize {
+pub fn part2(input: &str) -> usize {
+    let input = Input::from_str(input).unwrap();
     input
         .reports
         .into_iter()
         .filter(|report| {
-            is_report_valid(report) ||
-            (0..report.len()).any(|i| {
-                let mut new_report = report.clone();
-                new_report.remove(i);
-                is_report_valid(&new_report)
-            })
+            is_report_valid(report)
+                || (0..report.len()).any(|i| {
+                    let mut new_report = report.clone();
+                    new_report.remove(i);
+                    is_report_valid(&new_report)
+                })
         })
         .count()
 }
@@ -75,11 +77,11 @@ mod tests {
 
     #[test]
     fn test_part1() {
-        assert_eq!(2, part1(INPUT.parse().unwrap()));
+        assert_eq!(2, part1(INPUT));
     }
 
     #[test]
     fn test_part2() {
-        assert_eq!(4, part2(INPUT.parse().unwrap()));
+        assert_eq!(4, part2(INPUT));
     }
 }
