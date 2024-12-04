@@ -2,10 +2,10 @@
 using aoc24;
 using aoc24.Days;
 
-var input = Input.FetchFromWeb();
+var input = Input.Get();
 
 var s = Stopwatch.StartNew();
-var result = Day3.Part2(input);
+var result = Day4.Part2(input);
 s.Stop();
 
 Console.WriteLine(result);

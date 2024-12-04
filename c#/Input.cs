@@ -2,8 +2,28 @@
 
 public static class Input
 {
-    public const string InputPath = "../input.txt";
+    public const string InputPath = "{0}_{1}.txt";
     public const string CookiePath = ".cookie.session";
+
+    public static string Get()
+    {
+        var day = DateTime.Today.Day;
+        var year = DateTime.Today.Year;
+
+        return Get(year, day);
+    }
+
+    public static string Get(int year, int day)
+    {
+        var filePath = string.Format(InputPath, year, day);
+
+        if (!File.Exists(filePath))
+        {
+            File.WriteAllText(filePath, FetchFromWeb(year, day));
+        }
+
+        return File.ReadAllText(filePath);
+    }
 
     public static string FetchFromWeb()
     {
@@ -24,6 +44,6 @@ public static class Input
         var response = httpClient.GetAsync(inputUrl).Result;
         response.EnsureSuccessStatusCode();
 
-        return response.Content.ReadAsStringAsync().Result;
+        return response.Content.ReadAsStringAsync().Result.TrimEnd();
     }
 }
