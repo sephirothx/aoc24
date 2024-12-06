@@ -1,3 +1,5 @@
+use std::{convert::Infallible, ops::Add};
+
 pub fn manhattan_distance_i64(a: (i64, i64), b: (i64, i64)) -> i64 {
     (a.0.abs_diff(b.0) + a.1.abs_diff(b.1)) as i64
 }
@@ -33,6 +35,37 @@ impl Direction {
 
     pub fn iter() -> impl Iterator<Item = Direction> {
         [RIGHT, LEFT, DOWN, UP].into_iter()
+    }
+}
+
+impl TryFrom<char> for Direction {
+    type Error = Infallible;
+
+    fn try_from(c: char) -> Result<Self, Self::Error> {
+        let dir = match c {
+            '>' => RIGHT,
+            '<' => LEFT,
+            'v' => DOWN,
+            '^' => UP,
+            _ => unreachable!(),
+        };
+        Ok(dir)
+    }
+}
+
+impl Add<(i32, i32)> for Direction {
+    type Output = (i32, i32);
+
+    fn add(self, rhs: (i32, i32)) -> Self::Output {
+        (self.0 + rhs.0, self.1 + rhs.1)
+    }
+}
+
+impl Add<Direction> for (i32, i32) {
+    type Output = (i32, i32);
+
+    fn add(self, rhs: Direction) -> Self::Output {
+        (self.0 + rhs.0, self.1 + rhs.1)
     }
 }
 
