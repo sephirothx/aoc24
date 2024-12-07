@@ -29,8 +29,9 @@ pub const Input = struct {
     }
 };
 
-pub fn part1(allocator: std.mem.Allocator, input: Input) !u32 {
-    _ = allocator;
+pub fn part1(allocator: std.mem.Allocator, s: []const u8) !u32 {
+    const input = try Input.parse(allocator, s);
+    defer input.deinit();
     const list1 = input.columns[0];
     const list2 = input.columns[1];
     var sol: u32 = 0;
@@ -42,8 +43,9 @@ pub fn part1(allocator: std.mem.Allocator, input: Input) !u32 {
     return sol;
 }
 
-pub fn part2(allocator: std.mem.Allocator, input: Input) !i32 {
-    _ = allocator;
+pub fn part2(allocator: std.mem.Allocator, s: []const u8) !i32 {
+    const input = try Input.parse(allocator, s);
+    defer input.deinit();
     const list1 = input.columns[0];
     const list2 = input.columns[1];
     var sol: i32 = 0;
@@ -67,13 +69,9 @@ const TEST_INPUT =
 ;
 
 test "part 1" {
-    const input = try Input.parse(std.testing.allocator, TEST_INPUT);
-    defer input.deinit();
-    try std.testing.expectEqual(11, part1(std.testing.allocator, input));
+    try std.testing.expectEqual(11, part1(std.testing.allocator, TEST_INPUT));
 }
 
 test "part 2" {
-    const input = try Input.parse(std.testing.allocator, TEST_INPUT);
-    defer input.deinit();
-    try std.testing.expectEqual(31, part2(std.testing.allocator, input));
+    try std.testing.expectEqual(31, part2(std.testing.allocator, TEST_INPUT));
 }

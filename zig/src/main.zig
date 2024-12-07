@@ -1,16 +1,14 @@
 const std = @import("std");
 const f = @import("input.zig");
-const day = @import("days/2.zig");
+const day = @import("days/4.zig");
 
 pub fn main() !void {
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     const allocator = arena.allocator();
     defer arena.deinit();
 
-    const text = try f.fetchInputForDay(allocator, 2024, 2);
-    const input = try day.Input.parse(allocator, text);
-    defer input.deinit();
-    defer allocator.free(text);
+    const input = try f.fetchInputForDay(allocator, 2024, 4);
+    defer allocator.free(input);
 
     var timer = try std.time.Timer.start();
     const solution = day.part2(allocator, input);

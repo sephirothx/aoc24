@@ -81,10 +81,3 @@ pub fn downloadAllInputFiles(allocator: std.mem.Allocator) !void {
         }
     }
 }
-
-test "read some input" {
-    const content = try fetchInputForDay(std.testing.allocator, 2024, 1);
-    defer std.testing.allocator.free(content);
-
-    std.debug.print("{s}\n", .{content});
-}
