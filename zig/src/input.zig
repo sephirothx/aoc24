@@ -3,7 +3,7 @@ const std = @import("std");
 const input_dir_name = "input";
 const cookie_path = ".cookie.session";
 
-pub fn fetchInputForDay(allocator: std.mem.Allocator, comptime year: u16, comptime day: u8) ![]u8 {
+pub fn fetchInputForDay(allocator: std.mem.Allocator, comptime year: u16, comptime day: u8) ![]const u8 {
     var client = std.http.Client{ .allocator = allocator };
     defer client.deinit();
 
@@ -32,7 +32,7 @@ pub fn fetchInputForDay(allocator: std.mem.Allocator, comptime year: u16, compti
     try request.finish();
     try request.wait();
 
-    return try request.reader().readAllAlloc(allocator, std.math.maxInt(usize));
+    return std.mem.trim(u8, try request.reader().readAllAlloc(allocator, std.math.maxInt(usize)), "\n");
 }
 
 pub fn readInputFromFile(allocator: std.mem.Allocator, comptime day: u8) ![]u8 {
