@@ -35,8 +35,8 @@ pub fn part1(allocator: std.mem.Allocator, s: []const u8) !u32 {
     const list1 = input.columns[0];
     const list2 = input.columns[1];
     var sol: u32 = 0;
-    std.sort.pdq(i32, list1.items, {}, std.sort.asc(i32));
-    std.sort.pdq(i32, list2.items, {}, std.sort.asc(i32));
+    std.mem.sort(i32, list1.items, {}, std.sort.asc(i32));
+    std.mem.sort(i32, list2.items, {}, std.sort.asc(i32));
     for (list1.items, list2.items) |n1, n2| {
         sol += @abs(n1 - n2);
     }
