@@ -5,12 +5,12 @@ mod geometry;
 mod input;
 mod math;
 
-use days::day7::*;
+use days::day8::*;
 use input::read_from_file;
 use std::time::Instant;
 
 fn main() {
-    let input = read_from_file(7);
+    let input = read_from_file(8);
     let now = Instant::now();
     {
         println!("{}", part2(input.as_str()));
