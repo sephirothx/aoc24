@@ -3,6 +3,13 @@ const std = @import("std");
 const input_dir_name = "input";
 const cookie_path = ".cookie.session";
 
+pub fn getInputForDayCached(allocator: std.mem.Allocator, comptime year: u16, comptime day: u8) ![]const u8 {
+    return readCachedInputForDay(allocator, year, day) catch {
+        try downloadInputForDay(allocator, year, day);
+        return try readCachedInputForDay(allocator, year, day);
+    };
+}
+
 pub fn fetchInputForDay(allocator: std.mem.Allocator, comptime year: u16, comptime day: u8) ![]const u8 {
     var client = std.http.Client{ .allocator = allocator };
     defer client.deinit();
@@ -35,9 +42,15 @@ pub fn fetchInputForDay(allocator: std.mem.Allocator, comptime year: u16, compti
     return std.mem.trim(u8, try request.reader().readAllAlloc(allocator, std.math.maxInt(usize)), "\n");
 }
 
-pub fn readInputFromFile(allocator: std.mem.Allocator, comptime day: u8) ![]u8 {
+pub fn buildFilePath(allocator: std.mem.Allocator, comptime year: u16, comptime day: u8) ![]u8 {
+    const yearDir = comptime std.fmt.comptimePrint("{d}", .{year});
     const fileName = comptime std.fmt.comptimePrint("{d}.txt", .{day});
-    const filePath = try std.fs.path.join(allocator, &.{ "..", input_dir_name, fileName });
+    const filePath = try std.fs.path.join(allocator, &.{ "..", input_dir_name, yearDir, fileName });
+    return filePath;
+}
+
+pub fn readCachedInputForDay(allocator: std.mem.Allocator, comptime year: u16, comptime day: u8) ![]u8 {
+    const filePath = try buildFilePath(allocator, year, day);
     defer allocator.free(filePath);
 
     return readStringFromFile(allocator, filePath);
@@ -51,23 +64,20 @@ pub fn readStringFromFile(allocator: std.mem.Allocator, filePath: []const u8) ![
 }
 
 pub fn downloadInputForDay(allocator: std.mem.Allocator, comptime year: u16, comptime day: u8) !void {
-    var inputDir = try std.fs.cwd().openDir(input_dir_name, .{});
-    defer inputDir.close();
+    const filePath = try buildFilePath(allocator, year, day);
+    defer allocator.free(filePath);
 
-    const yearDir = comptime std.fmt.comptimePrint("{d}", .{year});
-    inputDir.makeDir(yearDir) catch |e| switch (e) {
+    const cwd = std.fs.cwd();
+
+    std.fs.cwd().makePath(std.fs.path.dirname(filePath).?) catch |err| switch (err) {
         error.PathAlreadyExists => {}, // ignore
-        else => return e,
+        else => return err,
     };
 
-    var fileDir = try inputDir.openDir(yearDir, .{});
-    defer fileDir.close();
-
-    const fileName = comptime std.fmt.comptimePrint("{}.txt", .{day});
-    const file = try fileDir.createFile(fileName, .{});
+    const file = try cwd.createFile(filePath, .{});
     defer file.close();
 
-    const bytesRead = fetchInputForDay(allocator, year, day);
+    const bytesRead = try fetchInputForDay(allocator, year, day);
     defer allocator.free(bytesRead);
 
     const bytesWritten = try file.write(bytesRead);
