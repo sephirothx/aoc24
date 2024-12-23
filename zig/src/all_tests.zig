@@ -5,4 +5,5 @@ test "all" {
     _ = @import("days/4.zig");
     _ = @import("days/5.zig");
     _ = @import("days/7.zig");
+    _ = @import("days/9.zig");
 }
